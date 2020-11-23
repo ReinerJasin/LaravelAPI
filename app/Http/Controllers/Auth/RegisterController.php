@@ -88,7 +88,6 @@ class RegisterController extends Controller
             redirect()->route('register');
         }
 
-        // dd($user);
 
         event(new ActivationEvent($user));
 
