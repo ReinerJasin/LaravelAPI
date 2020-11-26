@@ -40,31 +40,31 @@ class LoginController extends Controller
 
                         $this->isLogin(Auth::id());
 
-                        // $response = $http->post('http://127.0.0.1:8000/oauth/token', [
-                        //     'form_params' => [
-                        //         'grant_type' => 'password',
-                        //         'client_id' => $this->client->id,
-                        //         'client_secret' => $this->client->secret,
-                        //         'username' => $request->email,
-                        //         'password' => $request->password,
-                        //         'scope' => '*',
-                        //     ]
-                        // ]);
+                        $response = $http->post('http://guestbook.test/oauth/token', [
+                            'form_params' => [
+                                'grant_type' => 'password',
+                                'client_id' => $this->client->id,
+                                'client_secret' => $this->client->secret,
+                                'username' => $request->email,
+                                'password' => $request->password,
+                                'scope' => '*',
+                            ]
+                        ]);
 
-                        $params = [
-                            'grant_type' => 'password',
-                            'client_id' => $this->client->id,
-                            'client_secret' => $this->client->secret,
-                            'username' => request('email'),
-                            'password' => request('password'),
-                            'scope' => '*',
-                        ];
+                        // $params = [
+                        //     'grant_type' => 'password',
+                        //     'client_id' => $this->client->id,
+                        //     'client_secret' => $this->client->secret,
+                        //     'username' => request('email'),
+                        //     'password' => request('password'),
+                        //     'scope' => '*',
+                        // ];
 
-                        $request->request->add($params);
-                        $proxy = Request::create('oauth/token', 'POST');
-                        return Route::dispatch($proxy);
+                        // $request->request->add($params);
+                        // $proxy = Request::create('oauth/token', 'POST');
+                        // return Route::dispatch($proxy);
 
-                        // return json_decode((string) $response->getBody(), true);
+                        return json_decode((string) $response->getBody(), true);
                     
                     } else {
                         return response([
@@ -97,4 +97,43 @@ class LoginController extends Controller
         ]);
     }
 
+    public function refresh (Request $request){
+        $this->validate($request, [
+            'refresh_token' => 'required',
+        ], [
+            'refresh_token' => 'refresh token is required',
+        ]);
+
+        $http = new \GuzzleHttp\Client;
+
+        $response = $http->post('http://guestbook.test/oauth/token', [
+            'form_params' => [
+                'grant_type' => 'refresh_token',
+                'client_id' => $this->client->id,
+                'client_secret' => $this->client->secret,
+                'refresh_token' => $request->refresh_token,
+                'scope' => '*',
+            ]
+        ]);
+
+        return json_decode((string) $response->getBody(), true);
+    }
+
+    public function logout(){
+        $user = Auth::user();
+        $accessToken = Auth::user()->token();
+        DB::table('oauth_refresh_tokens')
+        ->where('access_token_id', $accessToken->id)
+        ->update(['revoked' => true]);
+
+        $user->update([
+            'is_login' => '0',
+        ]);
+
+        $accessToken->revoke();
+
+        return response([
+            'message' => 'Logged Out',
+        ]);
+    }
 }

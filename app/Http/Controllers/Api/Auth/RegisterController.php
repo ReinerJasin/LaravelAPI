@@ -26,6 +26,7 @@ class RegisterController extends Controller
             ]);
         }else{
             event(new ActivationEvent($user));
+        
             return response([
                 'message' => 'Account created, please verify your email'
             ]);
