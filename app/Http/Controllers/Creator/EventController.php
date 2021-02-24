@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\creator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
@@ -16,10 +16,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        //get all data from events table
-        $events = Event::all(); // == SELECT * FROM
         $pages = 'event';
-        return view('admin.event.index', compact('events', 'pages'));
+        $events = Event::all();
+        return view('creator.event.index', compact('events', 'pages'));
     }
 
     /**
@@ -45,7 +44,7 @@ class EventController extends Controller
     {
         //add new data
         Event::create($request->all());
-        return redirect()->route('admin.event.index');
+        return redirect()->route('creator.event.index');
     }
 
     /**
@@ -83,7 +82,7 @@ class EventController extends Controller
     {
         //update data from edit form
         $event->update($request->all());
-        return redirect()->route('admin.event.index');
+        return redirect()->route('creator.event.index');
     }
 
     /**

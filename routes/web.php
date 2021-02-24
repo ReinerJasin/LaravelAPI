@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Creator\EventController as CreatorEventController;
 use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\User\UserController as UUserController;
@@ -19,27 +20,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', [EventController::class, 'index'])->name('index');
-//Route::get('edit/{event}', [EventController::class, 'edit'])->name('event.edit');
-//
-//Route::view('add','event.addEvent')->name('addEvent');
-//Route::post('add', [EventController::class, 'store'])->name('event.store');
-//
-//Route::patch('update/{event}', [EventController::class, 'update'])->name('event.update');
-//Route::delete('delete/{event}', [EventController::class, 'destroy'])->name('event.delete');
+Route::resource('event', EventController::class);
+
 Route::get('/', function () {
     return redirect()->route('event.index');
 });
 
 Route::get('activate', [ActivationController::class, 'activate'])->name('activate');
-
-//Route::get('/', [StudentController::class, 'index'])->name('index');
-//Route::get('student/{student}', [StudentController::class, 'edit'])->name('student.edit');
-//Route::patch('update/{student}', [StudentController::class, 'update'])->name('student.update');
-//Route::delete('delete/{student}', [StudentController::class, 'destroy'])->name('student.destroy');
-//
-//Route::view('addStudent', 'student.addStudent')->name('student.create');
-//Route::post('create', [StudentController::class, 'store'])->name('student.store');
 
 
 Route::group([
@@ -56,7 +43,7 @@ Route::group([
     'prefix' => 'creator',
     'as' => 'creator.'
 ], function(){
-    Route::resource('event', EventController::class);
+    Route::resource('event', CreatorEventController::class);
 });
 
 Route::group([

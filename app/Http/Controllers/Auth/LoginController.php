@@ -51,7 +51,7 @@ class LoginController extends Controller
             'is_active' => '1',
             'is_verified' => '1',
         ];
-        
+
         $creator = [
             'email' => $request->email,
             'password' => $request->password,
@@ -60,7 +60,7 @@ class LoginController extends Controller
             'is_active' => '1',
             'is_verified' => '1',
         ];
-        
+
         $user = [
             'email' => $request->email,
             'password' => $request->password,
@@ -73,12 +73,14 @@ class LoginController extends Controller
         if (Auth::attempt($admin)){
             $this->isLogin(Auth::id());
             return redirect()->route('admin.event.index');
-        }else if (Auth::attempt($creator)){
+        }
+        if (Auth::attempt($creator)){
             $this->isLogin(Auth::id());
             return redirect()->route('creator.event.index');
-        }else if (Auth::attempt($user)){
+        }
+        if (Auth::attempt($user)){
             $this->isLogin(Auth::id());
-            return redirect()->route('event.index');
+            return redirect()->route('user.event.index');
         }
 
         return redirect()->route('login');

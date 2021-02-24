@@ -20,27 +20,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($events as $event)
+                @foreach($users as $user)
                     <tr>
+                        <td>{{ $user->name }}</a></td>
+                        <td>{{ $user->email }}</td>
                         <td>
-                            <a href="@auth {{ route('creator.event.edit', $event) }} @endauth">
-                                {{ $event->title }}
-                            </a>
+                            @foreach($user->events as $event)
+                                <li>{{ $event->title }}</li>
+                            @endforeach
                         </td>
-                        <td>{{ $event->description }}</td>
-                        <td>{{ $event->status }}</td>
-                        <td>{{ $event->creator->name }}</td>
-                        <td>{{ $event->updated_at }}</td>
-                        <td>{{ $event->created_at }}</td>
-                        @auth
-                            <td>
-                                <form action="{{ route('creator.event.destroy', $event) }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            </td>
-                        @endauth
                     </tr>
                 @endforeach
                 </tbody>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GuestController extends Controller
 {
@@ -14,7 +16,10 @@ class GuestController extends Controller
      */
     public function index()
     {
-        //
+        $pages = "event";
+        $attends = Auth::user()->attends;
+        $events = Event::doesntHave('guests')->get();
+        return view('user.event.index', compact('pages', 'attends', 'events'));
     }
 
     /**
